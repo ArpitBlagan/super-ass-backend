@@ -19,7 +19,7 @@ const app=express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin:['*','http://localhost:5173']
+    origin:['*','http://localhost:5173','https://657d930da6dfa72acbb10cf4--delicate-pegasus-7f8449.netlify.app']
 }))
 mongoose.connect(process.env.URL).then(con=>{console.log("connnected")});
 const storage = multer.diskStorage({
