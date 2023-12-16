@@ -6,7 +6,16 @@ const bodyParser = require('body-parser');
 const Router=require('./Router');
 const fs=require('fs');
 const fDB =require('./models/form');
-const cors=require('cors');const app=express();
+const cors=require('cors');
+const {v2}= require("cloudinary");
+
+v2.config({ 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET 
+});
+
+const app=express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
@@ -28,12 +37,20 @@ app.post("/addForm",upload.array('files'),async(req,res)=>{
     req.files.map((ele,index)=>{
     console.log(ele.path);
     files.push({name:ele.originalname,path:ele.path})
-    fs.unlink(ele.path,(err)=>{console.log("Error",err);})
     });
     console.log(req.body);
     const {Com,Cat,Cloze,email,formName}=req.body;
     console.log(Com,Cloze,Cat,email);
-    const img=files[0].name||'';
+    let response='';
+    console.log(files);
+    if(files.length&&files[0].path){
+      try{
+      response = await v2.uploader.upload(files[0].path, {
+        resource_type: "auto"
+    });fs.unlink(files[0].path,(err)=>{console.log("Error",err);});
+    }catch(err){console.log(err); fs.unlink(files[0].path,(err)=>{console.log("Error",err);})}}
+    const img=response.url;
+    console.log(img);
     const data=await fDB.create({formName,email,category:JSON.parse(Cat),cloze:JSON.parse(Cloze),
         comprehension:JSON.parse(Com),img});
     if(data){
