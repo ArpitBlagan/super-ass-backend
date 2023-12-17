@@ -16,8 +16,8 @@ const user=mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'fDB'
     },
-    cloze:[Object1],
-    category:[Object2],
-    comprehension:[String]
+    cloze:[[Object1]],
+    category:[[Object2]],
+    comprehension:[[String]]
 });
 module.exports=mongoose.model('uDB',user);

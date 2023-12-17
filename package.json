@@ -8,6 +8,7 @@
     "build": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "proxy":"*",
   "keywords": [],
   "author": "",
   "license": "ISC",
